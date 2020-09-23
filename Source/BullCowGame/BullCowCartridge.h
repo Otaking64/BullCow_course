@@ -16,6 +16,7 @@ class BULLCOWGAME_API UBullCowCartridge : public UCartridge
 	virtual void OnInput(const FString& Input) override;
 
 	// Your declarations go below!
-	private:
+	private: 
+	FString HiddenWord = TEXT("cowshit");//shouldn't be in this loop
 	
 };
