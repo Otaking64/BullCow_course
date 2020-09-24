@@ -15,24 +15,8 @@ void UBullCowCartridge::OnInput(const FString& Input) // When the player hits en
         ClearScreen();
         SetupGame();
     }else{
-        if(Input == HiddenWord){
-        PrintLine(TEXT("That's it! You won!"));
-        EndGame();
-        }else{
-            --Lives;
-            PrintLine(TEXT("Wrong word!"));
-            if(HiddenWord.Len() != Input.Len()){
-                PrintLine(TEXT("This word isn't even the right length! \nIt is %i letters long"), HiddenWord.Len());
-            }
-            if(Lives <= 0){
-                PrintLine(TEXT("Oof! You lost"));
-                EndGame();
-            }else{
-                
-                PrintLine(TEXT("You have %i lives left"), Lives);
-            }
-            
-        }
+        ProcessGuess(Input);
+        LivesChecker();
     }
      
 }
@@ -50,5 +34,42 @@ void UBullCowCartridge::SetupGame(){
 void UBullCowCartridge::EndGame(){
     bGameOver = true;
     PrintLine(FString::Printf(TEXT("The word was %s"), *HiddenWord));
-    PrintLine(TEXT("Try again? Press enter."));
+    PrintLine(TEXT("Want to play again? Press enter."));
+}
+
+void UBullCowCartridge::ProcessGuess(FString Guess){
+    if(Guess == HiddenWord){
+        PrintLine(TEXT("That's it! You won!"));
+        EndGame();
+        return;
+    }
+        
+    if(Guess.Len() < 1){
+        PrintLine(TEXT("You forgot to type in a word..."));
+        return;
+    }
+
+    if(HiddenWord.Len() != Guess.Len()){
+        PrintLine(TEXT("This word isn't even the right length! \nIt is %i letters long"), HiddenWord.Len());
+        --Lives;
+        return;
+    }
+
+    if(Guess != HiddenWord){
+        PrintLine(TEXT("Wrong word!"));
+        --Lives;
+        return;
+    }
+
+              
+}
+
+void UBullCowCartridge::LivesChecker(){
+if(Lives <= 0){
+    PrintLine(TEXT("Oof! You lost"));
+    EndGame();   
+}
+else if(!bGameOver){
+    PrintLine(TEXT("You have %i lives left"), Lives);
+}
 }
